@@ -659,6 +659,218 @@
     font-weight: 700;
   }
 
+<<<<<<< HEAD
+  /* PATH CHOOSER */
+  .path-chooser {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+  }
+  .path-btn {
+    padding: 0.85rem 2rem;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    background: var(--dark3);
+    color: var(--cream);
+    transition: all 0.3s;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .path-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .path-btn.active { background: var(--gold); border-color: var(--gold); color: #fff; }
+  .path-know { }
+  .path-help { }
+
+  /* QUIZ */
+  .quiz-section {
+    margin-bottom: 2rem;
+    animation: fadeUp 0.4s ease;
+  }
+  .quiz-progress {
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 99px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .quiz-bar {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+  .quiz-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 2rem;
+    margin-bottom: 1rem;
+  }
+  .quiz-question {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .quiz-option {
+    padding: 0.9rem 1.2rem;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--cream2);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-align: right;
+    transition: all 0.25s;
+  }
+  .quiz-option:hover { border-color: var(--gold); color: var(--cream); background: rgba(192,39,45,0.08); }
+  .quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .quiz-back-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0;
+  }
+  .quiz-back-btn:hover { color: var(--cream); }
+  .quiz-step-label { color: var(--text-muted); font-size: 0.85rem; }
+
+  /* QUIZ RESULT BANNER */
+  .quiz-result-banner {
+    background: var(--dark2);
+    border: 1px solid var(--gold);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.4s ease;
+  }
+  .quiz-result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .quiz-result-title {
+    color: var(--gold);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .quiz-result-subtitle {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin-top: 0.2rem;
+  }
+  .quiz-result-cards {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .quiz-result-card {
+    flex: 1;
+    min-width: 130px;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 1rem 0.75rem;
+    text-align: center;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .quiz-result-card:hover { border-color: var(--gold); }
+  .quiz-result-card-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+  .quiz-result-card-name {
+    color: var(--cream);
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+  .quiz-result-card-note {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+  }
+  .quiz-result-card-badge {
+    position: absolute;
+    top: -1px; left: -1px;
+    background: var(--gold);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    letter-spacing: 0.05em;
+  }
+  .quiz-reset-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--text-muted);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .quiz-reset-btn:hover { color: var(--cream); border-color: var(--cream); }
+
+  /* RECOMMENDED highlight on perfume cards */
+  .perfume-card.recommended::after {
+    content: '✦ مقترح';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--gold);
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    font-weight: 700;
+  }
+
+  /* GRID LOCKED STATE */
+  .perfumes-grid.grid-locked {
+    position: relative;
+    pointer-events: none;
+    user-select: none;
+  }
+  .perfumes-grid.grid-locked::after {
+    content: attr(data-lock-msg);
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,10,0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cream2);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+  }
+
+  /* لا أعرف option — subtle, smaller */
+  .quiz-option-dontknow {
+    opacity: 0.55;
+    font-size: 0.85rem !important;
+    border-style: dashed !important;
+  }
+  .quiz-option-dontknow:hover { opacity: 1; }
+
+=======
+>>>>>>> 64da9e0f7f8d232abb73cdcd96cb48fefb935ec7
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
@@ -742,6 +954,39 @@
     <h2 class="section-title" style="margin-bottom:0.5rem;">كوّن ٣ عطور من تشكيلة مختارة</h2>
     <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:2rem;">انقر على أي عطر لاختياره — اختر ٣ فقط • كل عطر ٣ مل</p>
 
+<<<<<<< HEAD
+    <!-- QUIZ / DIRECT CHOICE PATHS -->
+    <div class="path-chooser" id="pathChooser">
+      <button class="path-btn path-know" onclick="choosePath('direct')">✦ أعرف ما أريد</button>
+      <button class="path-btn path-help" onclick="choosePath('quiz')">🤔 ساعدني أختار</button>
+    </div>
+
+    <!-- QUIZ QUESTIONS -->
+    <div class="quiz-section" id="quizSection" style="display:none;">
+      <div class="quiz-progress">
+        <div class="quiz-bar" id="quizBar" style="width:0%"></div>
+      </div>
+      <div class="quiz-card" id="quizCard"></div>
+      <div class="quiz-nav">
+        <button class="quiz-back-btn" id="quizBackBtn" onclick="quizBack()" style="visibility:hidden;">→ رجوع</button>
+        <span class="quiz-step-label" id="quizStepLabel">سؤال ١ من ٤</span>
+      </div>
+    </div>
+
+    <!-- QUIZ RESULT BANNER -->
+    <div class="quiz-result-banner" id="quizResultBanner" style="display:none;">
+      <div class="quiz-result-header">
+        <div>
+          <div class="quiz-result-title" id="quizResultTitle"></div>
+          <div class="quiz-result-subtitle" id="quizResultSubtitle"></div>
+        </div>
+        <button class="quiz-reset-btn" onclick="resetQuiz()">أعد الاختبار</button>
+      </div>
+      <div class="quiz-result-cards" id="quizResultCards"></div>
+    </div>
+
+=======
+>>>>>>> 64da9e0f7f8d232abb73cdcd96cb48fefb935ec7
     <div class="perfumes-grid" id="perfumesGrid">
       <!-- Generated by JS -->
     </div>
@@ -838,6 +1083,14 @@ function setGender(g) {
   if (gender === g) return;
   gender = g;
   perfumes = g === 'male' ? perfumesMen : perfumeWomen;
+<<<<<<< HEAD
+  quizQuestions = g === 'male' ? quizQuestionsMen : quizQuestionsWomen;
+  resetRequest();
+  document.body.classList.toggle('female-theme', g === 'female');
+  document.getElementById('genderMale').classList.toggle('active', g === 'male');
+  document.getElementById('genderFemale').classList.toggle('active', g === 'female');
+  document.getElementById('nameInput').placeholder = g === 'female' ? 'فاطمة زينب' : 'مجتبى رفعت';
+=======
   resetRequest();
   // Toggle pink theme
   document.body.classList.toggle('female-theme', g === 'female');
@@ -847,6 +1100,7 @@ function setGender(g) {
   // Update form placeholder based on gender
   document.getElementById('nameInput').placeholder = g === 'female' ? 'فاطمة زينب' : 'مجتبى رفعت';
   // Update all text based on gender
+>>>>>>> 64da9e0f7f8d232abb73cdcd96cb48fefb935ec7
   updateTextByGender(g);
   updateUI();
 }
@@ -855,6 +1109,266 @@ let selected = []; // [{perfumeId, uniqueId}, ...]
 let sizes = {}; // sizes[uniqueId] = 2 or 3
 let idCounter = 0;
 
+<<<<<<< HEAD
+// ── QUIZ ──────────────────────────────────────────────────────────────────
+const quizQuestionsMen = [
+  {
+    text: 'ما الوقت الذي تفضّل ارتداء العطر فيه؟',
+    options: [
+      { label: '☀️ الصباح والنهار',   scores: { 3:2, 4:2, 6:1 } },
+      { label: '🌙 المساء والليل',     scores: { 2:2, 7:2, 1:1 } },
+      { label: '🕰️ طوال اليوم',       scores: { 5:2, 6:1, 3:1 } },
+      { label: '🤷 لا أعرف',           scores: {} },
+    ]
+  },
+  {
+    text: 'ما الشعور الذي تريد أن يمنحك إياه العطر؟',
+    options: [
+      { label: '💪 ثقة وقوة',          scores: { 2:2, 7:2, 5:1 } },
+      { label: '🌿 هدوء وانتعاش',      scores: { 3:2, 4:2, 6:1 } },
+      { label: '🌹 رومانسية وأناقة',   scores: { 1:2, 7:1, 6:1 } },
+      { label: '🤷 لا أعرف',           scores: {} },
+    ]
+  },
+  {
+    text: 'أي من هذه الروائح يجذبك أكثر؟',
+    options: [
+      { label: '🌲 خشبية وترابية',     scores: { 5:2, 2:1, 7:1 } },
+      { label: '🌸 زهرية وفاكهية',     scores: { 1:2, 6:1, 3:1 } },
+      { label: '🌊 مائية وحمضية',      scores: { 3:2, 4:2 } },
+      { label: '🤷 لا أعرف',           scores: {} },
+    ]
+  },
+  {
+    text: 'كيف تصف أسلوبك في الملبس؟',
+    options: [
+      { label: '🖤 كلاسيكي وأنيق',    scores: { 2:2, 7:2, 1:1 } },
+      { label: '👕 كاجوال ومريح',      scores: { 3:1, 4:1, 6:2 } },
+      { label: '✨ جريء ومميز',         scores: { 5:2, 7:1, 2:1 } },
+      { label: '🤷 لا أعرف',           scores: {} },
+    ]
+  }
+];
+
+const quizQuestionsWomen = [
+  {
+    text: 'متى تحبّين ارتداء عطرك؟',
+    options: [
+      { label: '☀️ في الصباح والنهار',  scores: { 103:2, 104:2, 107:1 } },
+      { label: '🌙 في المساء والسهرات', scores: { 101:2, 103:1, 106:1 } },
+      { label: '🕰️ طوال اليوم معي',    scores: { 106:2, 107:1, 104:1 } },
+      { label: '🤷 ما أدري',            scores: {} },
+    ]
+  },
+  {
+    text: 'ما الإحساس الذي تريدين أن يمنحك إياه العطر؟',
+    options: [
+      { label: '🌹 رومانسي وأنثوي',    scores: { 101:2, 103:2, 105:1 } },
+      { label: '🌿 منعش وخفيف',        scores: { 104:2, 107:2, 103:1 } },
+      { label: '🍬 حلو ودافئ',         scores: { 106:2, 102:2, 101:1 } },
+      { label: '🤷 ما أدري',            scores: {} },
+    ]
+  },
+  {
+    text: 'أي رائحة تجذبك أكثر؟',
+    options: [
+      { label: '🌸 زهور وياسمين',      scores: { 101:2, 103:2, 105:1 } },
+      { label: '🍓 فواكه وحلويات',     scores: { 102:2, 106:1, 104:1 } },
+      { label: '🌊 منعشة وخفيفة',      scores: { 104:2, 107:2 } },
+      { label: '🤷 ما أدري',            scores: {} },
+    ]
+  },
+  {
+    text: 'كيف تصفين أسلوبك؟',
+    options: [
+      { label: '👗 أنيقة وكلاسيكية',   scores: { 105:2, 101:2, 103:1 } },
+      { label: '🧸 ناعمة وعفوية',      scores: { 106:2, 102:1, 107:1 } },
+      { label: '✨ جريئة ومميزة',       scores: { 102:2, 104:1, 105:1 } },
+      { label: '🤷 ما أدري',            scores: {} },
+    ]
+  }
+];
+
+let quizQuestions = quizQuestionsMen;
+
+let quizStep = 0;
+let quizScores = {};
+let quizAnswers = [];
+let gridUnlocked = false; // grid is locked until path chosen or quiz done
+
+function lockGrid(quizInProgress) {
+  const grid = document.getElementById('perfumesGrid');
+  const isFemale = gender === 'female';
+  if (quizInProgress) {
+    grid.setAttribute('data-lock-msg', isFemale ? '⏳ أكملي الاختبار أولاً لإلغاء القفل' : '⏳ أكمل الاختبار أولاً لإلغاء القفل');
+  } else {
+    grid.setAttribute('data-lock-msg', isFemale ? '🔒 اختاري مسارك أولاً للمتابعة' : '🔒 اختر مسارك أولاً للمتابعة');
+  }
+  grid.classList.add('grid-locked');
+}
+
+function unlockGrid() {
+  const grid = document.getElementById('perfumesGrid');
+  grid.classList.remove('grid-locked');
+  gridUnlocked = true;
+}
+
+function choosePath(path) {
+  document.querySelectorAll('.path-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(path === 'direct' ? '.path-know' : '.path-help').classList.add('active');
+
+  if (path === 'direct') {
+    document.getElementById('quizSection').style.display = 'none';
+    document.getElementById('quizResultBanner').style.display = 'none';
+    clearRecommended();
+    unlockGrid();
+  } else {
+    quizStep = 0;
+    quizScores = {};
+    quizAnswers = [];
+    document.getElementById('quizSection').style.display = 'block';
+    document.getElementById('quizResultBanner').style.display = 'none';
+    clearRecommended();
+    lockGrid(true); // quiz in progress
+    renderQuizStep();
+  }
+}
+
+function renderQuizStep() {
+  const q = quizQuestions[quizStep];
+  const total = quizQuestions.length;
+
+  document.getElementById('quizBar').style.width = ((quizStep / total) * 100) + '%';
+  document.getElementById('quizStepLabel').textContent = `سؤال ${toArabic(quizStep + 1)} من ${toArabic(total)}`;
+  document.getElementById('quizBackBtn').style.visibility = quizStep > 0 ? 'visible' : 'hidden';
+
+  document.getElementById('quizCard').innerHTML = `
+    <div class="quiz-question">${q.text}</div>
+    <div class="quiz-options">
+      ${q.options.map((opt, i) => `
+        <button class="quiz-option${opt.label.includes('لا أعرف') ? ' quiz-option-dontknow' : ''}" onclick="quizAnswer(${i})">${opt.label}</button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function quizAnswer(optionIndex) {
+  const opt = quizQuestions[quizStep].options[optionIndex];
+  quizAnswers[quizStep] = optionIndex;
+
+  for (const [id, pts] of Object.entries(opt.scores)) {
+    quizScores[id] = (quizScores[id] || 0) + pts;
+  }
+
+  quizStep++;
+  if (quizStep < quizQuestions.length) {
+    renderQuizStep();
+  } else {
+    showQuizResult();
+  }
+}
+
+function quizBack() {
+  if (quizStep <= 0) return;
+  quizStep--;
+  const prevOpt = quizQuestions[quizStep].options[quizAnswers[quizStep]];
+  for (const [id, pts] of Object.entries(prevOpt.scores)) {
+    quizScores[id] = (quizScores[id] || 0) - pts;
+  }
+  quizAnswers.pop();
+  renderQuizStep();
+}
+
+function showQuizResult() {
+  const isFemale = gender === 'female';
+  const allDontKnow = Object.keys(quizScores).length === 0;
+
+  let suggestions = [];
+  let resultMsg = '';
+
+  if (allDontKnow) {
+    // Fixed beginner-friendly perfumes per gender
+    if (isFemale) {
+      suggestions = [103, 106, 107]; // ياسمين الليل • فانيلا كريمي • باقة الربيع
+      resultMsg = `🌸 لا بأس! إليكِ ٣ عطور مناسبة للمبتدئات — خفيفة وأنثوية ومحبوبة: <strong id="beginnerNames"></strong> — يمكنكِ اختيار أي عطر تشائين`;
+    } else {
+      suggestions = [3, 6, 4]; // نسيم البحر • المسك الأبيض • حمضيات الصباح
+      resultMsg = `👍 لا بأس! إليك ٣ عطور مناسبة للمبتدئين — سهلة وخفيفة ومقبولة في كل المناسبات: <strong id="beginnerNames"></strong> — يمكنك اختيار أي عطر تشاء`;
+    }
+  } else {
+    // Normal scoring path
+    const sorted = Object.entries(quizScores)
+      .filter(([, pts]) => pts > 0)
+      .sort((a, b) => b[1] - a[1])
+      .map(([id]) => Number(id));
+
+    suggestions = sorted.slice(0, 3);
+    if (suggestions.length < 2) {
+      perfumes.forEach(p => {
+        if (suggestions.length < 2 && !suggestions.includes(p.id)) suggestions.push(p.id);
+      });
+    }
+    resultMsg = isFemale
+      ? `✦ بناءً على إجاباتك نقترح: <strong id="beginnerNames"></strong> — لكن يمكنكِ اختيار أي عطر تشائين`
+      : `✦ بناءً على إجاباتك نقترح: <strong id="beginnerNames"></strong> — لكن يمكنك اختيار أي عطر تشاء`;
+  }
+
+  clearRecommended();
+  unlockGrid();
+  renderPerfumes();
+
+  suggestions.forEach(id => {
+    const card = document.getElementById('card-' + id);
+    if (card) card.classList.add('recommended');
+  });
+
+  // Build result cards
+  const cardsHTML = suggestions.map(id => {
+    const p = perfumes.find(x => x.id === id);
+    if (!p) return '';
+    return `
+      <div class="quiz-result-card">
+        <div class="quiz-result-card-badge">✦ مقترح</div>
+        <div class="quiz-result-card-icon">${p.icon}</div>
+        <div class="quiz-result-card-name">${p.name}</div>
+        <div class="quiz-result-card-note">${p.note}</div>
+      </div>`;
+  }).join('');
+
+  if (allDontKnow) {
+    document.getElementById('quizResultSubtitle').textContent = isFemale ? 'خفيفة وأنثوية ومحبوبة — يمكنكِ اختيار أي عطر تشائين' : 'سهلة وخفيفة ومقبولة في كل المناسبات — يمكنك اختيار أي عطر تشاء';
+  } else {
+    document.getElementById('quizResultTitle').textContent = isFemale ? '✦ عطورك المقترحة' : '✦ عطورك المقترحة';
+    document.getElementById('quizResultSubtitle').textContent = isFemale ? 'بناءً على إجاباتك — لكن يمكنكِ اختيار أي عطر تشائين' : 'بناءً على إجاباتك — لكن يمكنك اختيار أي عطر تشاء';
+  }
+  document.getElementById('quizResultCards').innerHTML = cardsHTML;
+  document.getElementById('quizResultBanner').style.display = 'block';
+  document.getElementById('quizBar').style.width = '100%';
+  document.getElementById('quizCard').innerHTML = '';
+  document.getElementById('quizBackBtn').style.visibility = 'hidden';
+  document.getElementById('quizStepLabel').textContent = '';
+}
+
+function resetQuiz() {
+  quizStep = 0;
+  quizScores = {};
+  quizAnswers = [];
+  gridUnlocked = false;
+  lockGrid(true);
+  document.getElementById('quizResultBanner').style.display = 'none';
+  document.getElementById('quizSection').style.display = 'block';
+  clearRecommended();
+  renderQuizStep();
+  renderPerfumes();
+}
+
+function clearRecommended() {
+  document.querySelectorAll('.perfume-card.recommended').forEach(c => c.classList.remove('recommended'));
+}
+// ── END QUIZ ───────────────────────────────────────────────────────────────
+
+=======
+>>>>>>> 64da9e0f7f8d232abb73cdcd96cb48fefb935ec7
 function renderPerfumes() {
   const grid = document.getElementById('perfumesGrid');
   grid.innerHTML = perfumes.map(p => {
@@ -1000,6 +1514,16 @@ function resetRequest() {
   selected = [];
   sizes = {};
   idCounter = 0;
+<<<<<<< HEAD
+  // Reset path/quiz state
+  gridUnlocked = false;
+  quizStep = 0; quizScores = {}; quizAnswers = [];
+  document.querySelectorAll('.path-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('quizSection').style.display = 'none';
+  document.getElementById('quizResultBanner').style.display = 'none';
+  clearRecommended();
+=======
+>>>>>>> 64da9e0f7f8d232abb73cdcd96cb48fefb935ec7
   document.getElementById('subscribeForm').style.display = 'block';
   document.getElementById('successMsg').classList.remove('show');
   document.getElementById('nameInput').value = '';
@@ -1007,6 +1531,10 @@ function resetRequest() {
   document.getElementById('addressInput').value = '';
   clearPhoneError();
   updateUI();
+<<<<<<< HEAD
+  lockGrid(false);
+=======
+>>>>>>> 64da9e0f7f8d232abb73cdcd96cb48fefb935ec7
   updateSubmitBtn();
 }
 
@@ -1065,6 +1593,10 @@ function handleSubmit() {
 document.getElementById('priceDisplay').textContent = '٢٩,٧٥٠ دينار';
 
 renderPerfumes();
+<<<<<<< HEAD
+lockGrid(false); // grid locked until path is chosen
+=======
+>>>>>>> 64da9e0f7f8d232abb73cdcd96cb48fefb935ec7
 updateTextByGender(gender);
 updateSubmitBtn();
 </script>
