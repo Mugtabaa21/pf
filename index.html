@@ -629,6 +629,85 @@
     margin: 0 auto 1rem;
   }
 
+  /* HOW TO USE GUIDE */
+  .howto-guide {
+    margin-top: 2.5rem;
+    text-align: center;
+  }
+  .howto-label {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 1.4rem;
+  }
+  .howto-timeline {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+  }
+  .howto-tl-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 160px;
+    animation: howtoFadeUp 0.5s ease both;
+  }
+  .howto-tl-num {
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    background: var(--dark);
+  }
+  .howto-tl-line {
+    width: 1px;
+    height: 18px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    opacity: 0.35;
+    margin: 0.4rem 0;
+  }
+  .howto-text {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    line-height: 1.55;
+    padding: 0 0.5rem;
+  }
+  /* connector between items */
+  .howto-timeline {
+    position: relative;
+  }
+  .howto-timeline::before {
+    content: '';
+    position: absolute;
+    top: 1rem;
+    right: calc(100% / 6);
+    left:  calc(100% / 6);
+    height: 1px;
+    background: linear-gradient(to left, transparent, var(--gold) 15%, var(--gold) 85%, transparent);
+    opacity: 0.4;
+    z-index: 0;
+  }
+  @keyframes howtoFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 520px) {
+    .howto-timeline { gap: 0; }
+    .howto-tl-item { max-width: 110px; }
+    .howto-text { font-size: 0.7rem; }
+  }
+
   /* GENDER SELECTOR */
   .gender-selector {
     display: flex;
@@ -997,14 +1076,32 @@
       اختر 3 عطور تناسب شغفك<br>
       التوصيل يصبح مجانا
     </p>
-    <div class="hero-cta">
-      <button class="btn-primary" onclick="document.getElementById('selector').scrollIntoView({behavior:'smooth'})">اشترك الآن</button>
-      <button class="btn-secondary" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">تعرف على المزيد</button>
-    </div>
     <!-- GENDER SELECTOR IN HERO -->
     <div class="gender-selector" style="margin-top:2rem;">
       <button class="gender-btn active" id="genderMale" onclick="setGender('male')">👨 رجالي</button>
       <button class="gender-btn" id="genderFemale" onclick="setGender('female')">👩 نسائي</button>
+    </div>
+
+    <!-- HOW TO USE MINI GUIDE -->
+    <div class="howto-guide">
+      <p class="howto-label" id="howtoLabel">كيف تستخدم الموقع؟</p>
+      <div class="howto-timeline">
+        <div class="howto-tl-item" style="animation-delay:0s">
+          <div class="howto-tl-num">١</div>
+          <div class="howto-tl-line"></div>
+          <p class="howto-text">اختر جنسك رجالي أو نسائي</p>
+        </div>
+        <div class="howto-tl-item" style="animation-delay:0.15s">
+          <div class="howto-tl-num">٢</div>
+          <div class="howto-tl-line"></div>
+          <p class="howto-text">سوّي الاختبار تعرف ذوقك، أو تجاوزه إذا تعرف شلون</p>
+        </div>
+        <div class="howto-tl-item" style="animation-delay:0.3s">
+          <div class="howto-tl-num">٣</div>
+          <div class="howto-tl-line"></div>
+          <p class="howto-text">اختر ٣ عطور واشترك</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1514,13 +1611,26 @@ function updateTextByGender(g) {
   const isFemale = g === 'female';
   
   // Update hero section
-  const heroH1 = document.querySelector('h1');
-  if (heroH1) {
-    heroH1.textContent = isFemale ? 'اكتشفي توقيعك ' : 'اكتشف توقيعك ';
-    const emSpan = document.createElement('em');
-    emSpan.textContent = 'الفاخر';
-    heroH1.appendChild(emSpan);
-  }
+const heroH1 = document.querySelector('h1');
+
+if (heroH1) {
+  const baseText = isFemale ? 'اتركي بصمتك ' : 'اترك بصمتك ';
+  heroH1.textContent = ''; 
+
+  // 1. Create the first part (White + Tilted)
+  const mainSpan = document.createElement('em');
+  mainSpan.textContent = baseText;
+  mainSpan.style.color = 'white'; // Sets the first two words to white
+  
+  // 2. Create the third word (Tilted)
+  const emSpan = document.createElement('em');
+  emSpan.textContent = 'المميزه';
+  // Note: This will use the default H1 color unless you specify otherwise
+
+  // 3. Append to the H1
+  heroH1.appendChild(mainSpan);
+  heroH1.appendChild(emSpan);
+}
   
   const heroDesc = document.querySelector('.hero-desc');
   if (heroDesc) {
@@ -1571,6 +1681,30 @@ function updateTextByGender(g) {
   if (subscribeTitle) {
     subscribeTitle.textContent = isFemale ? 'اشتركي الآن' : 'اشترك الآن';
   }
+
+  // Update path chooser buttons
+  const pathHelp = document.querySelector('.path-btn.path-help');
+  if (pathHelp) pathHelp.textContent = isFemale ? '🤔 ساعديني أختار' : '🤔 ساعدني أختار';
+
+  // Update howto-guide mini cards
+  const howtoTexts = document.querySelectorAll('.howto-text');
+  if (howtoTexts.length >= 3) {
+    howtoTexts[0].textContent = isFemale
+      ? 'اختاري جنسك رجالي أو نسائي'
+      : 'اختر جنسك رجالي أو نسائي';
+    howtoTexts[1].textContent = isFemale
+      ? 'سوّي الاختبار تعرفين ذوقك، أو تجاوزيه إذا تعرفين شلون'
+      : 'سوّي الاختبار تعرف ذوقك، أو تجاوزه إذا تعرف شلون';
+    howtoTexts[2].textContent = isFemale
+      ? 'اختاري ٣ عطور وحددي الأحجام واشتركي'
+      : 'اختر ٣ عطور وحدد الأحجام واشترك';
+  }
+
+  // Update howto-guide label
+  const howtoLabel = document.getElementById('howtoLabel');
+  if (howtoLabel) {
+    howtoLabel.textContent = isFemale ? 'كيف تستخدمين الموقع؟' : 'كيف تستخدم الموقع؟';
+  }
 }
 
 function updateSubmitBtn() {
@@ -1581,7 +1715,7 @@ function updateSubmitBtn() {
     btn.textContent = isFemale ? 'أكملي الاشتراك ✦' : 'أكمل الاشتراك ✦';
   } else {
     btn.disabled = true;
-    btn.textContent = isFemale ? `اختاري ${toArabic(3 - selected.length)} عطور أخرى لإكمال الاشتراك` : `اختر ${toArabic(3 - selected.length)} عطور أخرى لإكمال الاشتراك`;
+    btn.textContent = isFemale ? `اختاري ${toArabic(3 - selected.length)} عطور لإكمال الاشتراك` : `اختر ${toArabic(3 - selected.length)} عطور لإكمال الاشتراك`;
   }
 }
 
