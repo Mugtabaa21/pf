@@ -1886,25 +1886,32 @@ function handleSubmit() {
   clearNameError();
   clearPhoneError();
 
-  // Build WhatsApp message with order details
-  let message = `*طلب اشتراك جديد* 📦\n\n`;
-  message += `*الاسم:* ${name}\n`;
-  message += `*رقم الجوال:* ${phone}\n`;
-  if (buyerCoords) {
-    const wazeLink = `https://waze.com/ul?ll=${buyerCoords.lat},${buyerCoords.lng}&navigate=yes`;
-    message += `*الموقع على Waze:* ${wazeLink}\n`;
-  } else {
-    message += `*الموقع:* لم يتم تحديده\n`;
-  }
-  message += `*الجنس:* ${gender === 'female' ? 'نسائي' : 'رجالي'}\n\n`;
-  
-  message += `*العطور المختارة:*\n`;
-  selected.forEach((item, idx) => {
+  const perfumeList = selected.map((item, i) => {
     const perf = perfumes.find(p => p.id === item.perfumeId);
-    message += `${idx + 1}. ${perf.name}\n`;
-  });
-  
-  message += `\n*الإجمالي:* ٢٩,٧٥٠ دينار`;
+    return `${['١','٢','٣'][i]} ${perf.icon} ${perf.name}`;
+  }).join('\n');
+
+  const genderIcon = gender === 'female' ? '👩' : '👨';
+  const wazeLink = buyerCoords
+    ? `https://waze.com/ul?ll=${buyerCoords.lat},${buyerCoords.lng}&navigate=yes`
+    : null;
+
+  let message =
+`✦ *طلب جديد*
+
+👤 ${name}
+📞 ${phone}
+${genderIcon} ${gender === 'female' ? 'نسائي' : 'رجالي'}
+
+🌹 *العطور*
+${perfumeList}
+
+💰 ٢٩,٧٥٠ دينار
+
+📍 الموقع
+`;
+  if (wazeLink) message += wazeLink;
+  else message += 'لم يتم تحديده';
   
   // WhatsApp number to send to (change this to your business number)
   const whatsappNumber = '+9647717349858'; // Change this to your WhatsApp number
