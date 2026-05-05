@@ -1216,7 +1216,14 @@
     </div>
     <div class="form-group">
       <label>العنوان</label>
-      <input type="text" id="addressInput" placeholder="" />
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <input type="text" id="addressInput" placeholder="اكتب عنوانك أو حدد موقعك" style="flex:1;" />
+        <button type="button" id="locBtn" onclick="getLocation()" title="حدد موقعي" style="
+          background:var(--dark3);border:1px solid rgba(255,255,255,0.15);color:var(--cream);
+          padding:0 1rem;height:48px;cursor:pointer;font-size:1.1rem;white-space:nowrap;
+          transition:border-color 0.2s;flex-shrink:0;">📍</button>
+      </div>
+      <span id="locStatus" style="display:none;font-size:0.75rem;margin-top:0.4rem;color:var(--text-muted);"></span>
     </div>
     <button class="submit-btn" id="submitBtn" disabled onclick="handleSubmit()">
       اشترك الآن
@@ -1755,6 +1762,10 @@ function resetRequest() {
   document.getElementById('quizSection').style.display = 'none';
   document.getElementById('quizResultBanner').style.display = 'none';
   clearRecommended();
+  buyerCoords = null;
+  document.getElementById('locBtn').textContent = '📍';
+  document.getElementById('locBtn').disabled = false;
+  document.getElementById('locStatus').style.display = 'none';
   document.getElementById('subscribeForm').style.display = 'block';
   document.getElementById('successMsg').classList.remove('show');
   document.getElementById('nameInput').value = '';
@@ -1768,6 +1779,61 @@ function resetRequest() {
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+let buyerCoords = null; // { lat, lng }
+
+function getLocation() {
+  const btn = document.getElementById('locBtn');
+  const status = document.getElementById('locStatus');
+  if (!navigator.geolocation) {
+    status.style.display = 'block';
+    status.textContent = '⚠ المتصفح لا يدعم تحديد الموقع';
+    return;
+  }
+  btn.textContent = '⏳';
+  btn.disabled = true;
+  status.style.display = 'block';
+  status.style.color = 'var(--text-muted)';
+  status.textContent = 'جاري تحديد موقعك الدقيق... قد يستغرق ثوانٍ';
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const accuracy = pos.coords.accuracy; // meters
+      // If accuracy worse than 5km, warn but still use it
+      if (accuracy > 5000) {
+        btn.textContent = '⚠️';
+        btn.disabled = false;
+        status.style.color = '#e09955';
+        status.textContent = `⚠ الموقع غير دقيق (خطأ ${Math.round(accuracy/1000)}كم) — تأكد من تشغيل GPS وأعد المحاولة`;
+        buyerCoords = null;
+        return;
+      }
+      buyerCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      btn.textContent = '✅';
+      btn.disabled = false;
+      status.style.color = 'var(--gold)';
+      status.textContent = `✦ تم تحديد موقعك (دقة ${Math.round(accuracy)} متر)`;
+      const addr = document.getElementById('addressInput');
+      if (!addr.value.trim()) {
+        addr.value = `${buyerCoords.lat.toFixed(5)}, ${buyerCoords.lng.toFixed(5)}`;
+      }
+    },
+    (err) => {
+      buyerCoords = null;
+      btn.textContent = '📍';
+      btn.disabled = false;
+      status.style.color = '#e05555';
+      if (err.code === 1) {
+        status.textContent = '⚠ لم تسمح بالوصول للموقع — اكتب عنوانك يدوياً';
+      } else if (err.code === 2) {
+        status.textContent = '⚠ تعذّر تحديد الموقع — تأكد من تشغيل GPS';
+      } else {
+        status.textContent = '⚠ انتهت مهلة تحديد الموقع — أعد المحاولة';
+      }
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+  );
 }
 
 function handleSubmit() {
@@ -1793,6 +1859,10 @@ function handleSubmit() {
   message += `*الاسم:* ${name}\n`;
   message += `*رقم الجوال:* ${phone}\n`;
   message += `*العنوان:* ${address || 'لم يتم تحديده'}\n`;
+  if (buyerCoords) {
+    const wazeLink = `https://waze.com/ul?ll=${buyerCoords.lat},${buyerCoords.lng}&navigate=yes`;
+    message += `*الموقع على Waze:* ${wazeLink}\n`;
+  }
   message += `*الجنس:* ${gender === 'female' ? 'نسائي' : 'رجالي'}\n\n`;
   
   message += `*العطور المختارة:*\n`;
