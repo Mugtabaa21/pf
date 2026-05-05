@@ -1207,23 +1207,27 @@
   <div id="subscribeForm">
     <div class="form-group">
       <label>الاسم الكامل</label>
-      <input type="text" id="nameInput" placeholder="مجتبى رفعت" />
+      <input type="text" id="nameInput" placeholder="مجتبى رفعت" oninput="clearNameError()" />
+      <span id="nameError" style="display:none; color:var(--gold); font-size:0.8rem; margin-top:0.4rem;">⚠ يرجى إدخال الاسم الكامل</span>
     </div>
     <div class="form-group">
       <label>رقم الجوال</label>
       <input type="tel" id="phoneInput" placeholder="077xxxxxxxx" oninput="clearPhoneError()" />
-      <span id="phoneError" style="display:none; color:var(--gold); font-size:0.8rem; margin-top:0.4rem; display:none;">⚠ رقم الجوال يجب أن يكون ١١ رقماً</span>
+      <span id="phoneError" style="display:none; color:var(--gold); font-size:0.8rem; margin-top:0.4rem;">⚠ رقم الجوال يجب أن يكون ١١ رقماً</span>
     </div>
     <div class="form-group">
-      <label>العنوان</label>
-      <div style="display:flex;gap:0.5rem;align-items:center;">
-        <input type="text" id="addressInput" placeholder="اكتب عنوانك أو حدد موقعك" style="flex:1;" />
-        <button type="button" id="locBtn" onclick="getLocation()" title="حدد موقعي" style="
-          background:var(--dark3);border:1px solid rgba(255,255,255,0.15);color:var(--cream);
-          padding:0 1rem;height:48px;cursor:pointer;font-size:1.1rem;white-space:nowrap;
-          transition:border-color 0.2s;flex-shrink:0;">📍</button>
-      </div>
-      <span id="locStatus" style="display:none;font-size:0.75rem;margin-top:0.4rem;color:var(--text-muted);"></span>
+      <label>الموقع للتوصيل</label>
+      <button type="button" id="locBtn" onclick="getLocation()" style="
+        width:100%;padding:0.9rem 1.2rem;
+        background:var(--dark3);border:1.5px dashed rgba(255,255,255,0.2);
+        color:var(--cream);font-family:'IBM Plex Sans',sans-serif;font-size:0.95rem;
+        cursor:pointer;transition:all 0.3s;display:flex;align-items:center;
+        justify-content:center;gap:0.6rem;">
+        <span style="font-size:1.3rem;">📍</span>
+        <span id="locBtnText">اضغط هنا لتحديد موقعك للتوصيل</span>
+      </button>
+      <span id="locStatus" style="display:none;font-size:0.8rem;margin-top:0.5rem;color:var(--text-muted);text-align:center;"></span>
+      <span id="locError" style="display:none; color:var(--gold); font-size:0.8rem; margin-top:0.4rem;">⚠ يرجى تحديد موقعك للتوصيل</span>
     </div>
     <button class="submit-btn" id="submitBtn" disabled onclick="handleSubmit()">
       اشترك الآن
@@ -1763,14 +1767,18 @@ function resetRequest() {
   document.getElementById('quizResultBanner').style.display = 'none';
   clearRecommended();
   buyerCoords = null;
-  document.getElementById('locBtn').textContent = '📍';
-  document.getElementById('locBtn').disabled = false;
+  const locBtn = document.getElementById('locBtn');
+  locBtn.disabled = false;
+  locBtn.style.borderColor = 'rgba(255,255,255,0.2)';
+  locBtn.style.borderStyle = 'dashed';
+  locBtn.querySelector('span:first-child').textContent = '📍';
+  document.getElementById('locBtnText').textContent = 'اضغط هنا لتحديد موقعك للتوصيل';
   document.getElementById('locStatus').style.display = 'none';
+  document.getElementById('locError').style.display = 'none';
   document.getElementById('subscribeForm').style.display = 'block';
   document.getElementById('successMsg').classList.remove('show');
   document.getElementById('nameInput').value = '';
   document.getElementById('phoneInput').value = '';
-  document.getElementById('addressInput').value = '';
   clearPhoneError();
   updateUI();
   lockGrid(false);
@@ -1785,83 +1793,108 @@ let buyerCoords = null; // { lat, lng }
 
 function getLocation() {
   const btn = document.getElementById('locBtn');
+  const btnText = document.getElementById('locBtnText');
   const status = document.getElementById('locStatus');
   if (!navigator.geolocation) {
     status.style.display = 'block';
+    status.style.color = '#e05555';
     status.textContent = '⚠ المتصفح لا يدعم تحديد الموقع';
     return;
   }
-  btn.textContent = '⏳';
   btn.disabled = true;
+  btn.style.borderColor = 'rgba(255,255,255,0.3)';
+  btnText.textContent = 'جاري تحديد موقعك...';
   status.style.display = 'block';
   status.style.color = 'var(--text-muted)';
-  status.textContent = 'جاري تحديد موقعك الدقيق... قد يستغرق ثوانٍ';
+  status.textContent = 'ابقَ في مكانك لثوانٍ للحصول على أفضل دقة';
 
   navigator.geolocation.getCurrentPosition(
     (pos) => {
-      const accuracy = pos.coords.accuracy; // meters
-      // If accuracy worse than 5km, warn but still use it
-      if (accuracy > 5000) {
-        btn.textContent = '⚠️';
-        btn.disabled = false;
-        status.style.color = '#e09955';
-        status.textContent = `⚠ الموقع غير دقيق (خطأ ${Math.round(accuracy/1000)}كم) — تأكد من تشغيل GPS وأعد المحاولة`;
+      const acc = pos.coords.accuracy;
+      if (acc > 200) {
         buyerCoords = null;
+        btn.disabled = false;
+        btn.style.borderColor = '#e09955';
+        btn.style.borderStyle = 'dashed';
+        btnText.textContent = 'الموقع غير دقيق — اضغط للمحاولة مجدداً';
+        status.style.color = '#e09955';
+        status.textContent = `⚠ الدقة ${Math.round(acc)} متر — تأكد من تشغيل GPS وأعد المحاولة`;
         return;
       }
       buyerCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      btn.textContent = '✅';
       btn.disabled = false;
+      btn.style.borderColor = 'var(--gold)';
+      btn.style.borderStyle = 'solid';
+      btn.querySelector('span:first-child').textContent = '✅';
+      btnText.textContent = `تم تحديد موقعك (دقة ${Math.round(acc)} متر)`;
       status.style.color = 'var(--gold)';
-      status.textContent = `✦ تم تحديد موقعك (دقة ${Math.round(accuracy)} متر)`;
-      const addr = document.getElementById('addressInput');
-      if (!addr.value.trim()) {
-        addr.value = `${buyerCoords.lat.toFixed(5)}, ${buyerCoords.lng.toFixed(5)}`;
-      }
+      status.textContent = '✦ سيتم إرسال رابط Waze مع طلبك';
+      document.getElementById('locError').style.display = 'none';
     },
     (err) => {
       buyerCoords = null;
-      btn.textContent = '📍';
       btn.disabled = false;
+      btn.style.borderColor = '#e05555';
+      btn.style.borderStyle = 'dashed';
+      btnText.textContent = 'فشل تحديد الموقع — اضغط للمحاولة مجدداً';
       status.style.color = '#e05555';
-      if (err.code === 1) {
-        status.textContent = '⚠ لم تسمح بالوصول للموقع — اكتب عنوانك يدوياً';
-      } else if (err.code === 2) {
-        status.textContent = '⚠ تعذّر تحديد الموقع — تأكد من تشغيل GPS';
-      } else {
-        status.textContent = '⚠ انتهت مهلة تحديد الموقع — أعد المحاولة';
-      }
+      if (err.code === 1) status.textContent = '⚠ لم تسمح بالوصول للموقع — اضغط وسمح';
+      else if (err.code === 2) status.textContent = '⚠ تعذّر تحديد الموقع — تأكد من تشغيل GPS';
+      else status.textContent = '⚠ انتهت المهلة — أعد المحاولة';
     },
-    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
   );
+}
+
+function clearNameError() {
+  document.getElementById('nameError').style.display = 'none';
+  document.getElementById('nameInput').style.borderColor = '';
 }
 
 function handleSubmit() {
   const name = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
-  const address = document.getElementById('addressInput').value.trim();
-  
-  if (!name || !phone) {
-    alert('يرجى إدخال الاسم ورقم الجوال');
-    return;
+  let valid = true;
+
+  // Validate name
+  if (!name) {
+    document.getElementById('nameError').style.display = 'block';
+    document.getElementById('nameInput').style.borderColor = 'var(--gold)';
+    valid = false;
   }
+
+  // Validate phone
   const digitsOnly = phone.replace(/\D/g, '');
-  if (digitsOnly.length !== 11) {
+  if (!phone || digitsOnly.length !== 11) {
     const err = document.getElementById('phoneError');
     err.style.display = 'block';
     document.getElementById('phoneInput').style.borderColor = 'var(--gold)';
-    return;
+    valid = false;
   }
+
+  // Validate location
+  if (!buyerCoords) {
+    document.getElementById('locError').style.display = 'block';
+    document.getElementById('locBtn').style.borderColor = 'var(--gold)';
+    valid = false;
+  } else {
+    document.getElementById('locError').style.display = 'none';
+  }
+
+  if (!valid) return;
+
+  clearNameError();
   clearPhoneError();
-  
+
   // Build WhatsApp message with order details
   let message = `*طلب اشتراك جديد* 📦\n\n`;
   message += `*الاسم:* ${name}\n`;
   message += `*رقم الجوال:* ${phone}\n`;
-  message += `*العنوان:* ${address || 'لم يتم تحديده'}\n`;
   if (buyerCoords) {
     const wazeLink = `https://waze.com/ul?ll=${buyerCoords.lat},${buyerCoords.lng}&navigate=yes`;
     message += `*الموقع على Waze:* ${wazeLink}\n`;
+  } else {
+    message += `*الموقع:* لم يتم تحديده\n`;
   }
   message += `*الجنس:* ${gender === 'female' ? 'نسائي' : 'رجالي'}\n\n`;
   
