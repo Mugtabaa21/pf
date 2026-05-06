@@ -32,6 +32,9 @@
     font-family: 'IBM Plex Sans', sans-serif;
     overflow-x: hidden;
   }
+  @media (max-width: 600px) {
+    body { padding-bottom: 70px; }
+  }
 
   /* Grain overlay */
   body::before {
@@ -189,32 +192,51 @@
   }
   @media (max-width: 600px) {
     .progress-tracker {
-      left: 0.5rem;
-      top: 1rem;
+      left: 0;
+      right: 0;
+      top: auto;
+      bottom: 0;
       transform: none;
       flex-direction: row;
-      gap: 0;
       align-items: center;
+      justify-content: space-around;
+      gap: 0;
+      width: 100%;
+      background: rgba(10,10,10,0.97);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 0.5rem 0;
+      backdrop-filter: blur(12px);
+      z-index: 999;
     }
-    .pt-line { width: 16px; height: 2px; }
-    .pt-dot { width: 28px; height: 28px; }
-    .pt-label { display: none !important; }
-    .pt-step.active .pt-label {
+    .pt-step {
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .pt-line { display: none; }
+    .pt-dot {
+      width: 30px;
+      height: 30px;
+      font-size: 0.7rem;
+    }
+    .pt-label {
       display: block !important;
-      position: fixed !important;
-      top: 3.8rem;
-      left: 0.5rem;
-      right: auto;
+      position: static !important;
       transform: none !important;
       opacity: 1 !important;
-      font-size: 0.72rem;
-      background: rgba(10,10,10,0.92);
-      border: 1px solid rgba(192,39,45,0.3);
-      color: var(--gold) !important;
-      padding: 0.3rem 0.7rem;
+      font-size: 0.58rem !important;
+      background: none !important;
+      border: none !important;
+      padding: 0 !important;
+      backdrop-filter: none !important;
       white-space: nowrap;
       pointer-events: none;
+      color: var(--text-muted) !important;
+      text-align: center;
     }
+    .pt-step.active .pt-label { color: var(--gold) !important; }
+    .pt-step.done .pt-label { color: var(--cream2) !important; opacity: 0.6 !important; }
   }
 
   /* HERO */
