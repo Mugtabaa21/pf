@@ -32,9 +32,6 @@
     font-family: 'IBM Plex Sans', sans-serif;
     overflow-x: hidden;
   }
-  @media (max-width: 600px) {
-    body { padding-bottom: 70px; }
-  }
 
   /* Grain overlay */
   body::before {
@@ -51,8 +48,7 @@
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
-    z-index: 90;
-    index: 100;
+    z-index: 90;    
     padding: 1rem 3rem;
     min-height: 80px;
     display: flex;
@@ -192,51 +188,15 @@
   }
   @media (max-width: 600px) {
     .progress-tracker {
-      left: 0;
-      right: 0;
-      top: auto;
-      bottom: 0;
-      transform: none;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-around;
-      gap: 0;
-      width: 100%;
-      background: rgba(10,10,10,0.97);
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 0.5rem 0;
-      backdrop-filter: blur(12px);
-      z-index: 999;
+      left: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      max-height: calc(100vh - 80px);
+      margin-top: 40px;
     }
-    .pt-step {
-      flex: 1;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    .pt-line { display: none; }
-    .pt-dot {
-      width: 30px;
-      height: 30px;
-      font-size: 0.7rem;
-    }
-    .pt-label {
-      display: block !important;
-      position: static !important;
-      transform: none !important;
-      opacity: 1 !important;
-      font-size: 0.58rem !important;
-      background: none !important;
-      border: none !important;
-      padding: 0 !important;
-      backdrop-filter: none !important;
-      white-space: nowrap;
-      pointer-events: none;
-      color: var(--text-muted) !important;
-      text-align: center;
-    }
-    .pt-step.active .pt-label { color: var(--gold) !important; }
-    .pt-step.done .pt-label { color: var(--cream2) !important; opacity: 0.6 !important; }
+    .pt-dot { width: 28px; height: 28px; }
+    .pt-label { display: none; }
+    .pt-step.active .pt-label { display: block; font-size: 0.65rem; }
   }
 
   /* HERO */
@@ -1377,7 +1337,7 @@
     <div class="pt-dot" onclick="document.querySelector('.gender-selector').scrollIntoView({behavior:'smooth',block:'center'})">
       <span class="pt-num">١</span>
       <span class="pt-check">✓</span>
-      <span class="pt-label">اختر جنسك</span>
+      <span class="pt-label" id="ptLabel0">اختر جنسك</span>
     </div>
   </div>
   <div class="pt-line" id="ptLine0"></div>
@@ -1385,7 +1345,7 @@
     <div class="pt-dot" onclick="document.getElementById('selector').scrollIntoView({behavior:'smooth'})">
       <span class="pt-num">٢</span>
       <span class="pt-check">✓</span>
-      <span class="pt-label">اعرف ذوقك</span>
+      <span class="pt-label" id="ptLabel1">اعرف ذوقك</span>
     </div>
   </div>
   <div class="pt-line" id="ptLine1"></div>
@@ -1393,7 +1353,7 @@
     <div class="pt-dot" onclick="document.getElementById('perfumesGrid').scrollIntoView({behavior:'smooth'})">
       <span class="pt-num">٣</span>
       <span class="pt-check">✓</span>
-      <span class="pt-label">اختر ٣ عطور</span>
+      <span class="pt-label" id="ptLabel2">اختر ٣ عطور</span>
     </div>
   </div>
   <div class="pt-line" id="ptLine2"></div>
@@ -1401,7 +1361,7 @@
     <div class="pt-dot" onclick="document.getElementById('subscribe').scrollIntoView({behavior:'smooth'})">
       <span class="pt-num">٤</span>
       <span class="pt-check">✓</span>
-      <span class="pt-label">أكمل الطلب</span>
+      <span class="pt-label" id="ptLabel3">أكمل الطلب</span>
     </div>
   </div>
 </div>
@@ -2094,6 +2054,16 @@ if (heroH1) {
   if (howtoLabel) {
     howtoLabel.textContent = isFemale ? 'كيف تستخدمين الموقع؟' : 'كيف تستخدم الموقع؟';
   }
+
+  // Update progress tracker labels
+  const ptLabel0 = document.getElementById('ptLabel0');
+  if (ptLabel0) ptLabel0.textContent = isFemale ? 'اختاري جنسك' : 'اختر جنسك';
+  const ptLabel1 = document.getElementById('ptLabel1');
+  if (ptLabel1) ptLabel1.textContent = isFemale ? 'اعرفي ذوقك' : 'اعرف ذوقك';
+  const ptLabel2 = document.getElementById('ptLabel2');
+  if (ptLabel2) ptLabel2.textContent = isFemale ? 'اختاري ٣ عطور' : 'اختر ٣ عطور';
+  const ptLabel3 = document.getElementById('ptLabel3');
+  if (ptLabel3) ptLabel3.textContent = isFemale ? 'أكملي الطلب' : 'أكمل الطلب';
 }
 
 function updateSubmitBtn() {
@@ -2400,16 +2370,6 @@ function updateProgressTracker() {
   const step2Done = step1Done && selected.length === 3;
   // Step 3: form submitted
   const step3Done = document.getElementById('successMsg')?.classList.contains('show');
-
-  // Update labels based on gender
-  const isFemale = gender === 'female';
-  const labels = isFemale
-    ? ['اختاري جنسك', 'اعرفي ذوقك', 'اختاري ٣ عطور', 'أكملي الطلب']
-    : ['اختر جنسك',  'اعرف ذوقك',  'اختر ٣ عطور',   'أكمل الطلب'];
-  [pt0, pt1, pt2, pt3].forEach((pt, i) => {
-    const lbl = pt.querySelector('.pt-label');
-    if (lbl) lbl.textContent = labels[i];
-  });
 
   // — Floating dot tracker —
   pt0.className = 'pt-step' + (step0Done ? ' done' : ' active');
