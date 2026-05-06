@@ -194,14 +194,27 @@
       transform: none;
       flex-direction: row;
       gap: 0;
+      align-items: center;
     }
-    .pt-line {
-      width: 16px;
-      height: 2px;
-    }
+    .pt-line { width: 16px; height: 2px; }
     .pt-dot { width: 28px; height: 28px; }
-    .pt-label { display: none; }
-    .pt-step.active .pt-label { display: none; }
+    .pt-label { display: none !important; }
+    .pt-step.active .pt-label {
+      display: block !important;
+      position: fixed !important;
+      top: 3.8rem;
+      left: 0.5rem;
+      right: auto;
+      transform: none !important;
+      opacity: 1 !important;
+      font-size: 0.72rem;
+      background: rgba(10,10,10,0.92);
+      border: 1px solid rgba(192,39,45,0.3);
+      color: var(--gold) !important;
+      padding: 0.3rem 0.7rem;
+      white-space: nowrap;
+      pointer-events: none;
+    }
   }
 
   /* HERO */
@@ -2365,6 +2378,16 @@ function updateProgressTracker() {
   const step2Done = step1Done && selected.length === 3;
   // Step 3: form submitted
   const step3Done = document.getElementById('successMsg')?.classList.contains('show');
+
+  // Update labels based on gender
+  const isFemale = gender === 'female';
+  const labels = isFemale
+    ? ['اختاري جنسك', 'اعرفي ذوقك', 'اختاري ٣ عطور', 'أكملي الطلب']
+    : ['اختر جنسك',  'اعرف ذوقك',  'اختر ٣ عطور',   'أكمل الطلب'];
+  [pt0, pt1, pt2, pt3].forEach((pt, i) => {
+    const lbl = pt.querySelector('.pt-label');
+    if (lbl) lbl.textContent = labels[i];
+  });
 
   // — Floating dot tracker —
   pt0.className = 'pt-step' + (step0Done ? ' done' : ' active');
