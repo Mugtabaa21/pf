@@ -188,10 +188,20 @@
     background: var(--gold);
   }
   @media (max-width: 600px) {
-    .progress-tracker { left: 0.5rem; }
+    .progress-tracker {
+      left: 0.5rem;
+      top: 1rem;
+      transform: none;
+      flex-direction: row;
+      gap: 0;
+    }
+    .pt-line {
+      width: 16px;
+      height: 2px;
+    }
     .pt-dot { width: 28px; height: 28px; }
     .pt-label { display: none; }
-    .pt-step.active .pt-label { display: block; font-size: 0.65rem; }
+    .pt-step.active .pt-label { display: none; }
   }
 
   /* HERO */
