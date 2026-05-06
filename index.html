@@ -48,12 +48,17 @@
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 0.4rem 3rem;
+    z-index: 90;
+    index: 100;
+    padding: 1rem 3rem;
+    min-height: 80px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(10,10,10,0.98), transparent);
+    background: rgba(10,10,10,0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
   }
   .logo {
     font-family: 'IBM Plex Sans', sans-serif;
@@ -91,6 +96,9 @@
   .top-arrow:hover {
     background: rgba(255,255,255,0.22);
     transform: translateY(-2px);
+  }
+  @media (max-width: 600px) {
+    .top-arrow { display: none; }
   }
 
   /* HERO */
@@ -908,7 +916,7 @@
     content: '✦ مقترح';
     position: absolute;
     top: 8px;
-    left: 8px;
+    right: 8px;
     background: var(--gold);
     color: #fff;
     font-size: 0.65rem;
@@ -926,16 +934,65 @@
     content: attr(data-lock-msg);
     position: absolute;
     inset: 0;
-    background: rgba(10,10,10,0.75);
+    background: rgba(10,10,10,0.82);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--cream2);
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    backdrop-filter: blur(2px);
+    color: var(--cream);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(3px);
     pointer-events: none;
+    text-align: center;
+    padding: 1rem;
+    animation: lockPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes lockPulse {
+    0%, 100% { background: rgba(10,10,10,0.82); }
+    50%       { background: rgba(10,10,10,0.70); }
+  }
+  /* Animated arrow above the locked grid pointing to path buttons */
+  .grid-lock-arrow {
+    display: none;
+    text-align: center;
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    animation: bounceUp 1s ease-in-out infinite;
+  }
+  .perfumes-grid.grid-locked ~ .grid-lock-arrow,
+  .grid-lock-arrow.visible {
+    display: block;
+  }
+  @keyframes bounceUp {
+    0%, 100% { transform: translateY(0);    opacity: 0.6; }
+    50%       { transform: translateY(-8px); opacity: 1; }
+  }
+  /* Banner shown above the grid when locked */
+  .lock-banner {
+    display: none;
+    background: rgba(192,39,45,0.1);
+    border: 1px solid var(--gold);
+    border-radius: 0;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    animation: fadeUp 0.4s ease;
+  }
+  .lock-banner.visible { display: block; }
+  .lock-banner p {
+    color: var(--cream);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .lock-banner span {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+    font-weight: 400;
   }
 
   /* لا أعرف option — subtle, smaller */
@@ -1094,7 +1151,7 @@
         <div class="howto-tl-item" style="animation-delay:0.15s">
           <div class="howto-tl-num">٢</div>
           <div class="howto-tl-line"></div>
-          <p class="howto-text">سوّي الاختبار تعرف ذوقك، أو تجاوزه إذا تعرف شلون</p>
+          <p class="howto-text">ساعدنا نكتشف الي يناسبك ب٤ أسئلة فقط، أو تجاوز الاختبار إذا تعرف شنو يناسبك</p>
         </div>
         <div class="howto-tl-item" style="animation-delay:0.3s">
           <div class="howto-tl-num">٣</div>
@@ -1145,7 +1202,7 @@
     <!-- QUIZ / DIRECT CHOICE PATHS -->
     <div class="path-chooser" id="pathChooser">
       <button class="path-btn path-know" onclick="choosePath('direct')">✦ أعرف ما أريد</button>
-      <button class="path-btn path-help" onclick="choosePath('quiz')">🤔 ساعدني أختار</button>
+      <button class="path-btn path-help" onclick="choosePath('quiz')"> ساعدني أختار</button>
     </div>
 
     <!-- QUIZ QUESTIONS -->
@@ -1170,6 +1227,12 @@
         <button class="quiz-reset-btn" onclick="resetQuiz()">أعد الاختبار</button>
       </div>
       <div class="quiz-result-cards" id="quizResultCards"></div>
+    </div>
+
+    <!-- LOCK BANNER — shown when grid is locked -->
+    <div class="lock-banner visible" id="lockBanner">
+      <p id="lockBannerMsg">👆 اختر أحد الخيارين أعلاه للمتابعة</p>
+      <span id="lockBannerSub">إما أنك تعرف ما تريد، أو خذ الاختبار لنساعدك تختار</span>
     </div>
 
     <div class="perfumes-grid" id="perfumesGrid">
@@ -1292,6 +1355,7 @@ function setGender(g) {
 let selected = []; // [{perfumeId, uniqueId}, ...]
 let sizes = {}; // sizes[uniqueId] = 2 or 3
 let idCounter = 0;
+let recommendedIds = []; // persists across renders until submit or quiz reset
 
 // ── QUIZ ──────────────────────────────────────────────────────────────────
 const quizQuestionsMen = [
@@ -1382,18 +1446,29 @@ let gridUnlocked = false; // grid is locked until path chosen or quiz done
 function lockGrid(quizInProgress) {
   const grid = document.getElementById('perfumesGrid');
   const isFemale = gender === 'female';
+  const banner = document.getElementById('lockBanner');
+  const bannerMsg = document.getElementById('lockBannerMsg');
+  const bannerSub = document.getElementById('lockBannerSub');
+
   if (quizInProgress) {
-    grid.setAttribute('data-lock-msg', isFemale ? '⏳ أكملي الاختبار أولاً لإلغاء القفل' : '⏳ أكمل الاختبار أولاً لإلغاء القفل');
+    grid.setAttribute('data-lock-msg', isFemale ? '⏳ أكملي الاختبار أولاً' : '⏳ أكمل الاختبار أولاً');
+    bannerMsg.textContent = isFemale ? '⏳ أكملي الاختبار أعلاه أولاً' : '⏳ أكمل الاختبار أعلاه أولاً';
+    bannerSub.textContent = isFemale ? 'بعد ما تنهين الاختبار راح تنفتح العطور تلقائياً' : 'بعد ما تنهي الاختبار راح تنفتح العطور تلقائياً';
   } else {
-    grid.setAttribute('data-lock-msg', isFemale ? '🔒 اختاري مسارك أولاً للمتابعة' : '🔒 اختر مسارك أولاً للمتابعة');
+    grid.setAttribute('data-lock-msg', isFemale ? '👆 اختاري مسارك أولاً' : '👆 اختر مسارك أولاً');
+    bannerMsg.textContent = isFemale ? '👆 اختاري أحد الخيارين أعلاه للمتابعة' : '👆 اختر أحد الخيارين أعلاه للمتابعة';
+    bannerSub.textContent = isFemale ? 'إما تعرفين ما تريدين، أو خذي الاختبار لنساعدك تختارين' : 'إما تعرف ما تريد، أو خذ الاختبار لنساعدك تختار';
   }
   grid.classList.add('grid-locked');
+  if (banner) banner.classList.add('visible');
 }
 
 function unlockGrid() {
   const grid = document.getElementById('perfumesGrid');
   grid.classList.remove('grid-locked');
   gridUnlocked = true;
+  const banner = document.getElementById('lockBanner');
+  if (banner) banner.classList.remove('visible');
 }
 
 function choosePath(path) {
@@ -1510,6 +1585,7 @@ function showQuizResult() {
 
   clearRecommended();
   unlockGrid();
+  recommendedIds = [...suggestions];
   renderPerfumes();
 
   suggestions.forEach(id => {
@@ -1558,6 +1634,7 @@ function resetQuiz() {
 }
 
 function clearRecommended() {
+  recommendedIds = [];
   document.querySelectorAll('.perfume-card.recommended').forEach(c => c.classList.remove('recommended'));
 }
 // ── END QUIZ ───────────────────────────────────────────────────────────────
@@ -1567,8 +1644,9 @@ function renderPerfumes() {
   grid.innerHTML = perfumes.map((p, idx) => {
     const selectedInstances = selected.filter(s => s.perfumeId === p.id);
     const isSelected = selectedInstances.length > 0;
+    const isRecommended = recommendedIds.includes(p.id);
     return `
-    <div class="perfume-card ${isSelected ? 'selected' : ''} ${selected.length >= 3 && !isSelected ? 'disabled' : ''}"
+    <div class="perfume-card ${isSelected ? 'selected' : ''} ${isRecommended ? 'recommended' : ''} ${selected.length >= 3 && !isSelected ? 'disabled' : ''}"
          style="animation-delay:${idx * 0.05}s"
          onclick="${selected.length < 3 ? `togglePerfume(${p.id})` : ''}" id="card-${p.id}">
       ${isSelected ? `<button class="close-btn" onclick="event.stopPropagation(); removePerfume(${selectedInstances[selectedInstances.length - 1].uniqueId})">×</button>` : ''}
@@ -1701,14 +1779,14 @@ if (heroH1) {
   const howtoTexts = document.querySelectorAll('.howto-text');
   if (howtoTexts.length >= 3) {
     howtoTexts[0].textContent = isFemale
-      ? 'اختاري جنسك رجالي أو نسائي'
-      : 'اختر جنسك رجالي أو نسائي';
+      ? 'اختاري نوع العطور رجالي أو نسائي'
+      : 'اختر نوع العطور رجالي أو نسائي';
     howtoTexts[1].textContent = isFemale
-      ? 'سوّي الاختبار تعرفين ذوقك، أو تجاوزيه إذا تعرفين شلون'
-      : 'سوّي الاختبار تعرف ذوقك، أو تجاوزه إذا تعرف شلون';
+      ? 'ساعدينا نكتشف الي يناسبك ب٤ أسئلة فقط، أو تجاوزي الاختبار إذا تعرفين شنو يناسبك'
+      : 'ساعدنا نكتشف الي يناسبك ب٤ أسئلة فقط، أو تجاوز الاختبار إذا تعرف شنو يناسبك';
     howtoTexts[2].textContent = isFemale
-      ? 'اختاري ٣ عطور وحددي الأحجام واشتركي'
-      : 'اختر ٣ عطور وحدد الأحجام واشترك';
+      ? 'اختاري ٣ عطور تعبر عن شخصيتك واشتركي'
+      : 'اختر ٣ عطور تعبر عن شخصيتك واشترك';
   }
 
   // Update howto-guide label
@@ -1759,6 +1837,7 @@ function resetRequest() {
   selected = [];
   sizes = {};
   idCounter = 0;
+  recommendedIds = [];
   // Reset path/quiz state
   gridUnlocked = false;
   quizStep = 0; quizScores = {}; quizAnswers = [];
