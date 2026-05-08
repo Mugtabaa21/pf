@@ -814,6 +814,42 @@
     .howto-text { font-size: 0.7rem; }
   }
 
+  /* STEP 4 — convergence */
+  .howto-converge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0;
+    animation: howtoFadeUp 0.5s 0.45s ease both;
+  }
+  .howto-converge-wrap {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .howto-converge-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .howto-converge-dot {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 2px;
+  }
+  .howto-step4-text {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-align: center;
+    max-width: 200px;
+    padding: 0 0.5rem;
+    line-height: 1.55;
+  }
+
   /* GENDER SELECTOR */
   .gender-selector {
     display: flex;
@@ -1183,6 +1219,20 @@
     text-align: center;
     animation: fadeUp 0.4s ease;
   }
+  /* 1. Hide both by default */
+.lines-men, .lines-women {
+  display: none;
+}
+
+/* 2. Show MEN lines when female-theme is NOT present */
+body:not(.female-theme) .lines-men {
+  display: block;
+}
+
+/* 3. Show WOMEN lines when female-theme IS present */
+body.female-theme .lines-women {
+  display: block;
+}
   .lock-banner.visible { display: block; }
   .lock-banner p {
     color: var(--cream);
@@ -1375,16 +1425,10 @@
       <span class="price-num">٩ مل</span>
       <span class="price-unit">/ شهرياً • ٣ عطور × ٣ مل</span>
     </div>
-    <p class="hero-desc">
+    <p class="hero-desc" style="color:var(--cream);">
       اختر ٣ عطور تناسب شغفك<br>
       التوصيل يصبح مجانا
     </p>
-    <!-- GENDER SELECTOR IN HERO -->
-    <div class="gender-selector" style="margin-top:2rem;">
-      <button class="gender-btn" id="genderMale" onclick="setGender('male')">👨 رجالي</button>
-      <button class="gender-btn" id="genderFemale" onclick="setGender('female')">👩 نسائي</button>
-    </div>
-
     <!-- HOW TO USE MINI GUIDE -->
     <div class="howto-guide">
       <p class="howto-label" id="howtoLabel">كيف تستخدم الموقع؟</p>
@@ -1405,6 +1449,53 @@
           <p class="howto-text">اختر ٣ عطور واشترك</p>
         </div>
       </div>
+
+<div class="howto-converge">
+  <div class="howto-converge-wrap">     
+  <svg class="howto-converge-svg" viewBox="0 0 300 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="overflow: visible;">
+  <defs>
+    <filter id="glow"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="fadeGoldV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--gold)" stop-opacity="0"/><stop offset="15%" stop-color="var(--gold)" stop-opacity="0.55"/><stop offset="100%" stop-color="var(--gold)" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="brightMiddleMen" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8A1721" stop-opacity="0.8" />
+      <stop offset="30%" stop-color="#8A1721" stop-opacity="1" />
+      <stop offset="70%" stop-color="#8A1721" stop-opacity="1" />
+      <stop offset="100%" stop-color="#8A1721" stop-opacity="0.8" />
+    </linearGradient>
+
+    <linearGradient id="brightMiddleWomen" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#F04074" stop-opacity="0.8" />
+      <stop offset="30%" stop-color="#F04074" stop-opacity="1" />
+      <stop offset="70%" stop-color="#F04074" stop-opacity="1" />
+      <stop offset="100%" stop-color="#F04074" stop-opacity="0.8" />
+    </linearGradient>
+  </defs>
+
+  <g class="lines-men">
+    <polyline points="50,0 50,60 142,60" fill="none" stroke="url(#brightMiddleMen)" stroke-width="0.5"vector-effect="non-scaling-stroke" />    
+    <polyline points="250,0 250,60 158,60" fill="none" stroke="url(#brightMiddleMen)" stroke-width="0.5"vector-effect="non-scaling-stroke" />
+  </g>
+
+  <g class="lines-women">
+    <polyline points="65,-50 65,45 145,45" fill="none" stroke="url(#brightMiddleWomen)" stroke-width="0.5"vector-effect="non-scaling-stroke" />    
+    <polyline points="236,-50 236,45 155,45" fill="none" stroke="url(#brightMiddleWomen)" stroke-width="0.5"vector-effect="non-scaling-stroke" />
+  </g>
+</svg>
+
+    <div class="howto-converge-dot">
+      <div class="howto-tl-num" style="margin:0 auto;">٤</div>
+    </div>
+  </div>
+  <div class="howto-tl-line" style="margin:0.4rem auto; width:1px; height:18px; background: linear-gradient(to bottom, var(--gold), transparent); opacity:0.35;"></div>
+  <p class="howto-text howto-step4-text">خطوة وتخلص —ادخل بياناتك فقط وباقتك في طريقها إليك</p>
+</div>
+
+    <!-- GENDER SELECTOR IN HERO -->
+    <div class="gender-selector" style="margin-top:2rem;">
+      <button class="gender-btn" id="genderMale" onclick="setGender('male')">👨 رجالي</button>
+      <button class="gender-btn" id="genderFemale" onclick="setGender('female')">👩 نسائي</button>
     </div>
   </div>
 </section>
@@ -2041,8 +2132,17 @@ if (heroH1) {
       ? 'ساعدينا نكتشف الي يناسبك ب٤ أسئلة فقط، أو تجاوزي الاختبار إذا تعرفين شنو يناسبك'
       : 'ساعدنا نكتشف الي يناسبك ب٤ أسئلة فقط، أو تجاوز الاختبار إذا تعرف شنو يناسبك';
     howtoTexts[2].textContent = isFemale
-      ? 'اختاري ٣ عطور تعبر عن شخصيتك واشتركي'
-      : 'اختر ٣ عطور تعبر عن شخصيتك واشترك';
+      ? 'اختاري ٣ عطور تعبر عن شخصيتك وتناسب ذوقك'
+      : 'اختر ٣ عطور تعبر عن شخصيتك وتناسب ذوقك ';
+      howtoTexts[3].textContent = isFemale
+  ? 'خطوة وتخلصي — ادخلي بياناتك فقط وباقتك في طريقها إليكِ'
+  : 'خطوة وتخلص — ادخل بياناتك فقط وباقتك في طريقها إليك';
+  }
+
+  // Make converge-wrap taller for female theme (longer text)
+  const convergeWrap = document.querySelector('.howto-converge-wrap');
+  if (convergeWrap) {
+    convergeWrap.style.height = isFemale ? '40px' : '60px';
   }
 
   // Update howto-guide label
